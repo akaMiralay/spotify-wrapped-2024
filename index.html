@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="Velusi" />
+    <title>Spotify Wrapped 2024</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900&display=swap");
+      .bebas-neue-regular {
+        font-family: "Bebas Neue", serif;
+        font-weight: bold;
+        font-style: normal;
+      }
+      .roboto-regular {
+        font-family: "Roboto", serif;
+        font-weight: 400;
+        font-style: normal;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Arial", sans-serif;
+        background-color: #121212;
+        color: #fff;
+        position: relative;
+      }
+      #yapimci-velusi {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        font-size: 10px;
+        color: #666;
+        background: rgba(0, 0, 0, 0.5);
+        padding: 3px 5px;
+        z-index: 9998;
+      }
+      .background-animation {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(120deg, #191414, #1db954, #191414);
+        background-size: 300% 300%;
+        z-index: -1;
+        animation: gradientAnimation 8s ease infinite;
+      }
+      @keyframes gradientAnimation {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+      .slider {
+        width: 100%;
+        height: 100vh;
+        position: relative;
+        overflow: hidden;
+      }
+      .slide {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      .slide::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        right: 0;
+        width: 1000px;
+        height: 1000px;
+        transform: translateY(-50%) rotate(-15deg);
+        background: url("logo-Gruppe2.png") no-repeat center center;
+        background-size: contain;
+        opacity: 0.25;
+        filter: blur(8px);
+        pointer-events: none;
+        z-index: -1;
+      }
+      .active {
+        display: flex;
+      }
+      .btn {
+        font-size: 1.5rem;
+        padding: 0.8rem 2.5rem;
+        border-radius: 50px;
+        text-transform: uppercase;
+        box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.3);
+        transition: all 0.3s ease-in-out;
+      }
+      .btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0px 12px 20px rgba(0, 0, 0, 0.5);
+      }
+      @media (max-width: 768px) {
+        .btn {
+          font-size: 1.2rem;
+          padding: 0.6rem 2rem;
+        }
+        h1 {
+          font-size: 2rem;
+        }
+      }
+      .button-86 {
+        all: unset;
+        width: 200px;
+        height: 30px;
+        font-size: 16px;
+        background: transparent;
+        border: none;
+        position: relative;
+        color: #f0f0f0;
+        cursor: pointer;
+        z-index: 1;
+        padding: 10px 20px;
+        align-items: center;
+        justify-content: center;
+        white-space: nowrap;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+      }
+      .button-86::after,
+      .button-86::before {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        z-index: -99999;
+        transition: all 0.4s;
+      }
+      .button-86::before {
+        transform: translate(0%, 0%);
+        width: 100%;
+        height: 100%;
+        background: #28282d;
+        border-radius: 10px;
+      }
+      .button-86::after {
+        transform: translate(10px, 10px);
+        width: 35px;
+        height: 35px;
+        background: #ffffff15;
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
+        border-radius: 50px;
+      }
+      .button-86:hover::before {
+        transform: translate(5%, 20%);
+        width: 110%;
+        height: 110%;
+      }
+      .button-86:hover::after {
+        border-radius: 10px;
+        transform: translate(0, 0);
+        width: 100%;
+        height: 100%;
+      }
+      .button-86:active::after {
+        transition: 0s;
+        transform: translate(0, 5%);
+      }
+      .confetti-container {
+        user-select: none;
+        z-index: 9999;
+        pointer-events: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 100vh;
+        overflow: hidden;
+        display: none;
+      }
+      .confetti {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        display: flex;
+      }
+      .confetti i {
+        width: 3rem;
+        height: 3rem;
+        margin: 0 0.2rem;
+        animation-name: confetti;
+        animation-timing-function: linear;
+        animation-iteration-count: infinite;
+        animation-duration: calc(70s / var(--speed));
+      }
+      .confetti i:nth-child(even) {
+        transform: rotate(90deg);
+      }
+      @keyframes confetti {
+        0% {
+          transform: translateY(-100vh);
+        }
+        100% {
+          transform: translateY(100vh);
+        }
+      }
+      .confetti .square {
+        width: 1rem;
+        height: 1rem;
+        background-color: var(--bg);
+        transform: rotate(-140deg);
+      }
+      .confetti .rectangle {
+        width: 1rem;
+        height: 0.5rem;
+        background-color: var(--bg);
+      }
+      .confetti .hexagram {
+        width: 0;
+        height: 0;
+        border-left: 0.5rem solid transparent;
+        border-right: 0.5rem solid transparent;
+        border-bottom: 1rem solid var(--bg);
+        position: relative;
+      }
+      .confetti .hexagram:after {
+        content: "";
+        width: 0;
+        height: 0;
+        position: absolute;
+        top: 0.33rem;
+        left: -0.5rem;
+        border-left: 0.5rem solid transparent;
+        border-right: 0.5rem solid transparent;
+        border-top: 1rem solid var(--bg);
+      }
+      .confetti .pentagram {
+        width: 0rem;
+        height: 0rem;
+        display: block;
+        margin: 0.5rem 0;
+        border-right: 1rem solid transparent;
+        border-bottom: 0.7rem solid var(--bg);
+        border-left: 1rem solid transparent;
+        transform: rotate(35deg);
+        position: relative;
+      }
+      .confetti .pentagram:before {
+        content: "";
+        width: 0;
+        height: 0;
+        display: block;
+        position: absolute;
+        top: -0.45rem;
+        left: -0.65rem;
+        border-bottom: 0.8rem solid var(--bg);
+        border-left: 0.3rem solid transparent;
+        border-right: 0.3rem solid transparent;
+        transform: rotate(-35deg);
+      }
+      .confetti .pentagram:after {
+        content: "";
+        width: 0rem;
+        height: 0rem;
+        display: block;
+        position: absolute;
+        top: 0.03rem;
+        left: -1.05rem;
+        border-right: 1rem solid transparent;
+        border-bottom: 0.7rem solid var(--bg);
+        border-left: 1rem solid transparent;
+        transform: rotate(-70deg);
+      }
+      .confetti .dodecagram {
+        background: var(--bg);
+        width: 0.8rem;
+        height: 0.8rem;
+        position: relative;
+      }
+      .confetti .dodecagram:before {
+        content: "";
+        height: 0.8rem;
+        width: 0.8rem;
+        background: var(--bg);
+        transform: rotate(30deg);
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+      .confetti .dodecagram:after {
+        content: "";
+        height: 0.8rem;
+        width: 0.8rem;
+        background: var(--bg);
+        transform: rotate(60deg);
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+      .confetti .wavy-line {
+        position: relative;
+      }
+      .confetti .wavy-line::after,
+      .confetti .wavy-line::before {
+        content: "";
+        height: 1rem;
+        width: 8rem;
+        background-size: 2rem 1rem;
+        position: absolute;
+        left: -9rem;
+        transform: rotate(90deg);
+      }
+      .confetti .wavy-line::before {
+        top: 1rem;
+        background-image: linear-gradient(
+          45deg,
+          transparent,
+          transparent 50%,
+          var(--bg) 50%,
+          transparent 60%
+        );
+      }
+      .confetti .wavy-line::after {
+        background-image: linear-gradient(
+          -45deg,
+          transparent,
+          transparent 50%,
+          var(--bg) 50%,
+          transparent 60%
+        );
+      }
+    </style>
+  </head>
+  <body>
+    <div id="yapimci-velusi">
+      Creator: akaMiralay, Velusi
+    </div>
+    <div class="background-animation"></div>
+    <div class="confetti-container" id="confetti">
+      <div class="confetti">
+        <!-- Confetti elements -->
+        <i style="--speed: 10; --bg: yellow;" class="square"></i>
+        <i style="--speed: 12; --bg: purple;" class="pentagram"></i>
+        <i style="--speed: 15; --bg: cyan;" class="rectangle"></i>
+        <i style="--speed: 20; --bg: blue;" class="hexagram"></i>
+        <i style="--speed: 25; --bg: red;" class="pentagram"></i>
+        <i style="--speed: 22; --bg: green;" class="dodecagram"></i>
+        <i style="--speed: 16; --bg: pink;" class="wavy-line"></i>
+        <i style="--speed: 30; --bg: orange;" class="square"></i>
+        <i style="--speed: 18; --bg: yellow;" class="rectangle"></i>
+        <i style="--speed: 25; --bg: white;" class="square"></i>
+        <i style="--speed: 14; --bg: green;" class="rectangle"></i>
+        <i style="--speed: 27; --bg: yellow;" class="wavy-line"></i>
+        <i style="--speed: 32; --bg: purple;" class="pentagram"></i>
+        <i style="--speed: 19; --bg: red;" class="square"></i>
+        <i style="--speed: 21; --bg: green;" class="rectangle"></i>
+        <i style="--speed: 33; --bg: yellow;" class="dodecagram"></i>
+        <i style="--speed: 35; --bg: pink;" class="wavy-line"></i>
+        <i style="--speed: 16; --bg: red;" class="dodecagram"></i>
+        <i style="--speed: 13; --bg: pink;" class="wavy-line"></i>
+        <i style="--speed: 26; --bg: white;" class="hexagram"></i>
+        <i style="--speed: 34; --bg: green;" class="wavy-line"></i>
+        <i style="--speed: 28; --bg: black;" class="pentagram"></i>
+        <i style="--speed: 29; --bg: gold;" class="square"></i>
+        <i style="--speed: 17; --bg: teal;" class="rectangle"></i>
+        <i style="--speed: 25; --bg: lime;" class="dodecagram"></i>
+        <i style="--speed: 33; --bg: pink;" class="wavy-line"></i>
+        <i style="--speed: 12; --bg: magenta;" class="rectangle"></i>
+        <i style="--speed: 40; --bg: tomato;" class="square"></i>
+        <i style="--speed: 14; --bg: green;" class="pentagram"></i>
+        <i style="--speed: 19; --bg: blue;" class="rectangle"></i>
+        <i style="--speed: 16; --bg: purple;" class="hexagram"></i>
+        <i style="--speed: 20; --bg: red;" class="pentagram"></i>
+        <i style="--speed: 32; --bg: yellow;" class="dodecagram"></i>
+        <i style="--speed: 39; --bg: white;" class="wavy-line"></i>
+        <i style="--speed: 22; --bg: orange;" class="square"></i>
+        <i style="--speed: 11; --bg: green;" class="rectangle"></i>
+        <i style="--speed: 10; --bg: white;" class="square"></i>
+        <i style="--speed: 31; --bg: green;" class="rectangle"></i>
+        <i style="--speed: 36; --bg: red;" class="dodecagram"></i>
+        <i style="--speed: 29; --bg: pink;" class="wavy-line"></i>
+        <i style="--speed: 14; --bg: white;" class="hexagram"></i>
+        <i style="--speed: 17; --bg: purple;" class="wavy-line"></i>
+        <i style="--speed: 24; --bg: yellow;" class="pentagram"></i>
+        <i style="--speed: 23; --bg: white;" class="square"></i>
+        <i style="--speed: 28; --bg: green;" class="rectangle"></i>
+        <i style="--speed: 37; --bg: red;" class="dodecagram"></i>
+        <i style="--speed: 38; --bg: pink;" class="wavy-line"></i>
+        <i style="--speed: 25; --bg: pink;" class="rectangle"></i>
+        <i style="--speed: 30; --bg: red;" class="square"></i>
+        <i style="--speed: 18; --bg: red;" class="pentagram"></i>
+        <!-- Repeat the set or add more as desired -->
+      </div>
+    </div>
+    <div class="container-fluid p-0">
+      <div id="slider" class="slider">
+        <div id="audio-container">
+          <audio id="background-audio" loop>
+            <source src="ses1.MP3" type="audio/mp3" />
+            Your browser does not support this audio.
+          </audio>
+        </div>
+
+        <div
+          id="play-audio-button"
+          style="position: fixed; bottom: 20px; right: 20px; z-index: 9999;"
+        >
+          <button class="button-86 btn btn-primary btn-lg next-btn shadow-lg">
+            Start the music, pop the confetti!
+          </button>
+        </div>
+
+        <!-- Slide 1 -->
+        <section class="slide active text-center text-light p-5">
+          <div class="container">
+            <h1
+              class="display-3 mb-4 bebas-neue-regular"
+              style="font-size: 80px; font-weight: bold;"
+            >
+              Journey of 2024<br />
+              with GRUPPE!
+            </h1>
+            <p class="lead mb-4 roboto-regular">
+              Are you curious to see what we've accomplished with Gruppe this
+              year?<br />
+              <i>We are super excited!</i>
+            </p>
+            <button
+              class="button-86 btn btn-primary btn-lg next-btn shadow-lg"
+              style="font-weight: bold;"
+              onclick="nextSlide()"
+            >
+              Let's Begin The Journey!
+              <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
+        </section>
+
+        <!-- Slide 2 -->
+        <section class="slide text-center text-light p-5">
+          <div class="container">
+            <h1 class="display-4 mb-4 bebas-neue-regular">
+              WHAT HAVE WE DONE IN 2024?
+            </h1>
+            <div class="row gy-4">
+              <div class="col-md-4">
+                <div class="card bg-light text-dark p-4">
+                  <h2
+                    class="bebas-neue-regular"
+                    style="font-size: 3rem;"
+                  >
+                    8,921
+                  </h2>
+                  <p class="mb-0 roboto-regular">
+                    Patrol Reports Submitted.
+                  </p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="card bg-light text-dark p-4">
+                  <h2
+                    class="bebas-neue-regular"
+                    style="font-size: 3rem;"
+                  >
+                    100+
+                  </h2>
+                  <p class="mb-0 roboto-regular">
+                    New Personnel Joined Our Company.
+                  </p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="card bg-light text-dark p-4">
+                  <h2
+                    class="bebas-neue-regular"
+                    style="font-size: 3rem;"
+                  >
+                    200+
+                  </h2>
+                  <p class="mb-0 roboto-regular">
+                    Events Placed Under Our Protection.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <button
+              class="btn btn-primary btn-lg mt-4 next-btn shadow-lg"
+              onclick="nextSlide()"
+            >
+              Next <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
+        </section>
+
+        <!-- Slide 3 -->
+        <section class="slide text-center text-light p-5">
+          <div class="container">
+            <h1 class="display-4 mb-4 bebas-neue-regular">
+              2024: TO INFINITY AND BEYOND!
+            </h1>
+            <p class="lead roboto-regular">
+              In 2024, we gained hundreds of new clients, visited countless
+              properties, and signed numerous agreements.<br />
+              Gruppe Sechs is committed to providing the highest level of
+              service to all of our clients.
+            </p>
+            <p class="lead roboto-regular">
+              As we say goodbye to 2024 and send it off to infinity, we are
+              already preparing for 2025.<br />
+              We have a lot of new and exciting features planned for 2025, and
+              we've already begun bringing them to life!
+            </p>
+            <button
+              class="btn btn-primary btn-lg mt-4 next-btn shadow-lg"
+              onclick="nextSlide()"
+            >
+              Next <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
+        </section>
+
+        <!-- Slide 4 -->
+        <section class="slide text-center text-light p-5">
+          <div class="container">
+            <h1 class="display-4 mb-4 bebas-neue-regular">
+              2024 HAS TREATED US WELL!
+            </h1>
+            <div class="row gy-4">
+              <div class="col-md-4">
+                <div class="card bg-light text-dark p-4">
+                  <h2
+                    class="bebas-neue-regular"
+                    style="font-size: 3rem;"
+                  >
+                    12+
+                  </h2>
+                  <p class="mb-0 roboto-regular">
+                    Red Code Reports Submitted.
+                  </p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="card bg-light text-dark p-4">
+                  <h2
+                    class="bebas-neue-regular"
+                    style="font-size: 3rem;"
+                  >
+                    200+
+                  </h2>
+                  <p class="mb-0 roboto-regular">
+                    Different Property Contracts Signed.
+                  </p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="card bg-light text-dark p-4">
+                  <h2
+                    class="bebas-neue-regular"
+                    style="font-size: 3rem;"
+                  >
+                    289+
+                  </h2>
+                  <p class="mb-0 roboto-regular">
+                    Orange Code Reports Issued.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <button
+              class="btn btn-primary btn-lg mt-4 next-btn shadow-lg"
+              onclick="nextSlide()"
+            >
+              Next <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
+        </section>
+
+        <!-- Slide 5 -->
+        <section class="slide text-center text-light p-5">
+          <div class="container">
+            <h1 class="display-4 mb-4 bebas-neue-regular">
+              WE ARE THRILLED ABOUT 2025!
+            </h1>
+            <p class="lead roboto-regular mb-4">
+              We’re on the verge of launching new projects, new opportunities,
+              and achieving brand new milestones. Join us now and be part of
+              this excitement!
+            </p>
+            <div class="d-flex justify-content-center align-items-center gap-3">
+              <button
+                class="btn btn-success btn-lg next-btn shadow-lg"
+                onclick="restartSlides()"
+              >
+                Back To Start
+                <i class="fas fa-undo"></i>
+              </button>
+              <a
+                href="https://discord.com/invite/ypqVU73VHA"
+                target="_blank"
+                class="btn btn-outline-light btn-lg shadow-lg"
+              >
+                Join Discord
+                <i class="fab fa-discord"></i>
+              </a>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+    ></script>
+
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <script>
+      // Disable right-click
+      document.addEventListener(
+        "contextmenu",
+        function (e) {
+          e.preventDefault();
+        },
+        false
+      );
+
+      // Disable specific key combos
+      document.onkeydown = function (e) {
+        if (e.keyCode == 123) {
+          e.preventDefault();
+          return false;
+        }
+        if (e.ctrlKey && e.shiftKey && e.keyCode == 73) {
+          e.preventDefault();
+          return false;
+        }
+        if (e.ctrlKey && e.shiftKey && e.keyCode == 74) {
+          e.preventDefault();
+          return false;
+        }
+        if (e.ctrlKey && (e.key === "u" || e.key === "U")) {
+          e.preventDefault();
+          return false;
+        }
+        if (e.ctrlKey && (e.key === "s" || e.key === "S")) {
+          e.preventDefault();
+          return false;
+        }
+        if (e.ctrlKey && e.shiftKey && (e.key === "s" || e.key === "S")) {
+          e.preventDefault();
+          return false;
+        }
+      };
+
+      const slides = document.querySelectorAll(".slide");
+      const audioElement = document.getElementById("background-audio");
+      const playAudioButton = document.getElementById("play-audio-button");
+      let currentSlide = 0;
+
+      // Confetti trigger
+      function triggerConfetti() {
+        const confettiEl = document.getElementById("confetti");
+        if (!confettiEl) return;
+        confettiEl.style.display = "block";
+        setTimeout(() => {
+          confettiEl.style.display = "none";
+        }, 50000);
+      }
+
+      // Different audio files for each slide
+      const audioFiles = ["ses1.MP3", "ses2.MP3", "ses3.MP3", "ses4.MP3", "ses3.MP3"];
+
+      // Adjust initial audio volume
+      audioElement.volume = 0.4;
+
+      function changeAudio(file) {
+        if (audioElement) {
+          audioElement.pause();
+          audioElement.querySelector("source").src = file;
+          audioElement.load();
+          audioElement.play();
+        }
+      }
+
+      function hideSlide(slide, callback) {
+        gsap.to(slide, {
+          opacity: 0,
+          duration: 0.5,
+          onComplete: () => {
+            slide.classList.remove("active");
+            slide.style.opacity = "";
+            if (callback) callback();
+          },
+        });
+      }
+
+      function showSlide(slide) {
+        slide.classList.add("active");
+        triggerConfetti();
+        gsap.fromTo(
+          slide,
+          { opacity: 0, rotationY: 90, scale: 0.8 },
+          {
+            opacity: 1,
+            rotationY: 0,
+            scale: 1,
+            duration: 1,
+            ease: "back.out",
+          }
+        );
+      }
+
+      function nextSlide() {
+        const current = slides[currentSlide];
+        hideSlide(current, () => {
+          currentSlide = (currentSlide + 1) % slides.length;
+          const next = slides[currentSlide];
+          showSlide(next);
+
+          // Trigger confetti on the last slide, optionally
+          if (currentSlide === slides.length - 1) {
+            triggerConfetti();
+          }
+          changeAudio(audioFiles[currentSlide]);
+        });
+      }
+
+      function restartSlides() {
+        hideSlide(slides[currentSlide], () => {
+          currentSlide = 0;
+          showSlide(slides[currentSlide]);
+          changeAudio(audioFiles[currentSlide]);
+        });
+      }
+
+      playAudioButton.addEventListener("click", () => {
+        audioElement.play();
+        playAudioButton.style.display = "none";
+        triggerConfetti();
+      });
+    </script>
+  </body>
+</html>
