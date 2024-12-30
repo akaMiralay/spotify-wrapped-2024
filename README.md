@@ -4,7 +4,7 @@ This is the *Spotify-like* Wrapped version of our Gruppe Sechs 2024 highlights. 
 
 ## Demo
 
-- **Live Demo:** [Click here](https://akamiralay.github.io/gruppe-sechs-wrapped-2024/)  
+- **Live Demo:** [Click here](https://akamiralay.github.io/spotify-wrapped-2024/)  
 
 ## Features
 
